@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="es">
+<style>
+
+  /* --- 1a. Base y fondo --- */
+  html, body {
+    width: 100%;
+    height: 100%;
+  }
+  body {
+    overflow-y: hidden;
+    margin: 0;
+
+    /* Color de fondo (se ve si no hay imagen de fondo) */
+    background-color: #1a1200;
+
+    /* Imagen de fondo: se sobreescribe desde JS si CONFIG.backgroundImage tiene valor */
+    background-image: linear-gradient(135deg, #1a1200 0%, #2d1f00 50%, #1a1200 100%);
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #fff;
+  }
+  * {
+    box-sizing: border-box !important;
+    user-select: none !important;
+    list-style-type: none !important;
+  }
+  *::selection {
+    background-color: rgba(255, 210, 0, 0.4);
+  }
+
+  /* --- 1b. Caja genérica --- */
+  .box {
+    width: 100%;
+    padding: 8px;
+    background-color: rgba(20, 15, 0, 0.6);
+    border: 2px solid rgba(255, 200, 0, 0.18);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px 2px rgba(0, 0, 0, 0.5);
+  }
+  .boxTitle {
+    display: flex;
+    align-items: center;
+    padding: 2px 4px 8px;
+    color: #ffd700;
+  }
+  .boxTitle span {
+    margin-left: 9px;
+    color: #fff;
+    font-size: 15px;
+  }
+
+  /* --- 1c. Lista de archivos --- */
+  main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+  }
+  section.list {
+    height: 392px;
+    margin-bottom: 14px;
+  }
+  ul.items {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 6px;
+    width: 100%;
+    height: calc(100% - 34px);
+    margin: 0;
+    padding: 3px 3px 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ffd700 transparent;
+  }
+  ul.items li {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 28px;
+    margin-bottom: 3px;
+    padding-left: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  ul.items li:hover {
+    background-color: rgba(255, 210, 0, 0.1);
+  }
+  ul.items li.selected {
+    background-color: rgba(255, 210, 0, 0.2);
+    border-left: 3px solid #ffd700;
+  }
+
+  /* Etiquetas de version y tipo en cada archivo */
+  li .tag {
+    background-color: rgba(255, 200, 0, 0.2);
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 400;
+    padding: 1px 5px;
+    margin-left: 6px;
+    color: #ffd700;
+    pointer-events: none;
+  }
+  li .vtag {
+    background-color: rgba(255, 210, 0, 0.85);
+    color: #1a1000 !important;
+    font-weight: 700;
+  }
+
+  /* --- 1d. Botones de descarga --- */
+  section.downloads .downloadButtons {
+    display: flex;
+    height: 34px;
+    gap: 6px;
+  }
+  .downloadButtons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 34px;
+    font-size: 13px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgba(255, 180, 0, 0.25);
+    border: 1px solid rgba(255, 200, 0, 0.3);
+    transition: background 0.15s;
+  }
+  .downloadButtons a:hover  { background-color: rgba(255, 180, 0, 0.4); }
+  .downloadButtons a:active { background-color: rgba(255, 180, 0, 0.15); outline: 2px solid rgba(255, 200, 0, 0.6); }
+
+  /* --- 1e. Buscador --- */
+  .search {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 340px;
+    display: flex;
+    gap: 6px;
+    padding: 6px;
+    background-color: rgba(20, 15, 0, 0.7);
+    border: 2px solid rgba(255, 200, 0, 0.18);
+    border-radius: 10px;
+  }
+  input {
+    background: none;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .search #bananasearch { width: 285px; }
+
+  /* --- 1f. Sidebar izquierdo --- */
+  aside.left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    padding: 12px;
+    pointer-events: none;
+  }
+  aside.left * { pointer-events: auto; }
+  aside.left .box { width: 190px; border-radius: 10px; }
+
+  /* Logo */
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px 14px;
+    border-bottom: 1px solid rgba(255, 200, 0, 0.2);
+    margin-bottom: 6px;
+  }
+  .brand-logo img {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+  .brand-icon-fallback {
+    font-size: 28px;
+    filter: drop-shadow(0 2px 4px rgba(255, 200, 0, 0.5));
+  }
+  .brand-text .name { font-size: 15px; font-weight: 700; color: #ffd700; letter-spacing: 0.03em; }
+  .brand-text .sub  { font-size: 10px; color: rgba(255, 200, 0, 0.5); margin-top: 1px; }
+
+  /* Sección y botones de categoría */
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255, 200, 0, 0.4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 4px 4px;
+  }
+  aside.left .categories { display: flex; flex-direction: column; padding: 2px 2px 0; }
+  ul.categories li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    margin-bottom: 3px;
+    padding: 0 8px;
+    border-radius: 5px;
+    font-size: 13px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.75);
+    transition: background 0.12s;
+  }
+  ul.categories li:hover    { background-color: rgba(255, 200, 0, 0.12); color: #fff; }
+  ul.categories li.selected { background-color: rgba(255, 200, 0, 0.25); color: #ffd700; border-left: 3px solid #ffd700; }
+  .cat-icon  { font-size: 14px; width: 18px; text-align: center; }
+  .cat-count { margin-left: auto; background: rgba(255, 200, 0, 0.15); color: rgba(255, 200, 0, 0.8); font-size: 10px; padding: 1px 6px; border-radius: 8px; }
+
+  /* Caja de info inferior del sidebar */
+  aside.left .bottom { position: absolute; bottom: 12px; }
+  aside article.box  { padding: 8px 12px; }
+  aside article.box * { margin: 0; font-size: 13px; font-weight: 400; }
+  aside article.box h1 { margin-bottom: 8px; text-align: center; font-size: 14px; font-weight: 600; color: #ffd700; }
+
+  /* --- 1g. Sidebar derecho --- */
+  aside.right {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 12px;
+    pointer-events: none;
+  }
+  aside.right * { pointer-events: auto; }
+  aside.right .box { margin-top: 12px; width: auto; align-self: flex-end; border-radius: 8px; padding: 4px; display: flex; gap: 4px; }
+  aside.right button {
+    width: 48px;
+    height: 32px;
+    border: none;
+    background: none;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; color: #ffd700; font-size: 18px; transition: background 0.12s;
+  }
+  aside.right button:hover { background-color: rgba(255, 200, 0, 0.15); }
+
+  /* --- 1h. Overlay --- */
+  #overlay {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 11;
+  }
+  #overlay .title { display: flex; justify-content: space-between; align-items: center; width: 600px; font-size: 20px; margin-bottom: 12px; color: #ffd700; }
+  .title button { width: 28px; height: 28px; border: none; background: rgba(255, 200, 0, 0.15); border-radius: 5px; cursor: pointer; color: #ffd700; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+  .title button:hover { background: rgba(255, 200, 0, 0.3); }
+  #overlay article { width: 640px; max-height: 85vh; padding: 0 20px 36px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #ffd700 transparent; }
+  #overlay article * { user-select: text !important; }
+  #overlay article h1 { font-size: 30px; text-align: center; margin-bottom: 14px; color: #ffd700; }
+  #overlay article p  { font-weight: 400; margin: 8px 0; color: rgba(255,255,255,0.85); }
+  #overlay article a  { color: #ffd700; font-weight: 600; }
+
+  /* --- 1i. Pie de página --- */
+  .dmca { position: fixed; bottom: 6px; left: 50%; transform: translateX(-50%); font-size: 12px; opacity: 0.4; text-shadow: 0 0 8px #000; color: #ffd700; }
+
+  /* --- 1j. Scrollbar personalizada --- */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: none; }
+  ::-webkit-scrollbar-thumb { background: #ffd700; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #ffaa00; }
+
+  /* --- 1k. Colores de botones por plataforma --- */
+  .mediafire      { background-color: rgba(  0, 119, 255, 0.5)  !important; }
+  .mediafire:hover{ background-color: rgba(  0, 119, 255, 0.35) !important; }
+  .gofile         { background-color: rgba(255, 200,   0, 0.4)  !important; color: #000 !important; font-weight: 600; }
+  .gofile:hover   { background-color: rgba(255, 200,   0, 0.25) !important; }
+  .mega           { background-color: rgba(221,  20,   5, 0.5)  !important; }
+  .mega:hover     { background-color: rgba(221,  20,   5, 0.35) !important; }
+  .torrent        { background-color: rgba(100, 200,  50, 0.4)  !important; }
+  .torrent:hover  { background-color: rgba(100, 200,  50, 0.25) !important; }
+  .drive          { background-color: rgba(12, 230, 12, 0.5)  !important; }
+  .drive:hover    { background-color: rgba(11, 135, 11, 0.35) !important; }
+  .romsfun        { background-color: rgba(255, 0, 208, 0.6)  !important; }
+  .romsfun:hover  { background-color: rgba(69, 5, 82, 0.4)  !important; }
+  .github         { background-color: rgba(7, 129, 236, 0.4)  !important; }
+  .github:hover   { background-color: rgba(13, 7, 129, 0.4)  !important; }
+
+  /* --- 1l. Responsive --- */
+  @media (max-height: 600px) {
+    aside article.box, .search, .dmca { display: none !important; }
+  }
+  @media (orientation: portrait), (max-width: 720px) {
+    body { overflow-y: scroll; }
+    main { top: calc(50vh - 30px); width: calc(100vw - 24px); }
+    section.list { height: calc(100vh - 290px) !important; }
+    aside.right { display: none; }
+    aside.left { width: 100vw; }
+    aside article.box { display: none !important; }
+    aside.left .categories { flex-direction: row; overflow-x: auto; width: calc(100vw - 24px); scrollbar-width: thin; position: absolute; top: calc(100vh - 58px); }
+    ul.categories li { padding: 0 10px; min-width: fit-content; }
+    .cat-count, .cat-icon { display: none; }
+    .search { width: calc(100vw - 24px); position: absolute; top: calc(100vh - 112px); padding: 4px 8px; align-items: center; }
+    .search #bananasearch { height: 38px; width: 100%; font-size: 16px; }
+    aside.left .bottom { position: absolute; top: 18px; right: 12px; height: 32px; }
+    #overlay article { width: calc(100vw - 24px); }
+    #overlay .title  { width: calc(100vw - 44px); }
+  }
+
+</style>
+
+<title>BANANA GAMES</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title"       content="BANANA GAMES">
+<meta property="og:description" content="Tu centro de descargas de juegos, emuladores, apps y más.">
+<meta name="description"        content="Tu centro de descargas de juegos, emuladores, apps y más.">
+<meta property="theme-color"    content="#ffd700">
+
+
+<div id="overlay">
+  <div class="title">
+    <span id="overlayTitle">Artículo</span>
+    <button onclick="closeOverlay()">✕</button>
+  </div>
+  <article class="box" id="overlayContent">
+    <p style="text-align:center;color:rgba(255,200,0,.6)">Cargando...</p>
+  </article>
+</div>
+
+<div class="search box">
+  <span style="color:rgba(255,200,0,.6);font-size:18px">🔍</span>
+  <input id="bananasearch" placeholder="Buscar juego, app, emulador...">
+</div>
+
+<main>
+  <section class="list box">
+    <div class="boxTitle">
+      <span style="font-size:18px">🍌</span>
+      <span id="categoryTitle">Selecciona una categoría</span>
+    </div>
+    <ul class="items" id="itemList"></ul>
+  </section>
+  <section class="downloads box" id="downloadsSection">
+    <div class="boxTitle">
+      <span style="font-size:18px">⬇</span>
+      <span>Descargas</span>
+    </div>
+    <div class="downloadButtons" id="downloadButtons"></div>
+  </section>
+</main>
+
+<aside class="left">
+  <div class="box">
+    <div class="brand-logo" id="brandLogo"></div>
+    <div class="sidebar-section-label">Categorías</div>
+    <nav><ul class="categories" id="categoryList"></ul></nav>
+  </div>
+  <div class="bottom">
+    <article class="box" id="infoBox"></article>
+  </div>
+</aside>
+
+<aside class="right">
+  <div class="box" id="socialButtons"></div>
+</aside>
+
+<span class="dmca" id="footerText"></span>
+
+<audio id="bg-music" loop>
+    <source src="TU_ENLACE_DE_MUSICA_AQUI.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+/* ═══════════════════════════════════════════════════════════════
+   3a. CONFIGURACION — EDITA AQUÍ
+   ═══════════════════════════════════════════════════════════════ */
+
+var CONFIG = {
+
+  /* ── Nombre del sitio ── */
+  siteName:    "BANANA GAMES",
+  siteTagline: "Centro de descargas",
+
+
+  /* ── Logo del sidebar ──────────────────────────────────────────── */
+  logoType: "image",
+  logo:     "Gemini_Generated_Image_q8lxs5q8lxs5q8lx.png",
+
+
+  /* ── Imagen de fondo ───────────────────────────────────────────── */
+  backgroundImage: "Fondo.png",
+
+
+  /* ── Texto del cuadro de info (parte inferior del sidebar) ── */
+  infoTitle: "🍌 Info",
+  infoText:  "Todos los archivos son gratuitos.<br>Ante cualquier problema, <b style='color:#ffd700'>contáctanos</b>.<br>Creditos a OptiJuegos",
+
+
+  /* ── Pie de página ── */
+  footerText: "bananagames@gmail.com",
+
+
+  /* ── Redes sociales (botones del sidebar derecho) ──────────────── */
+  socialLinks: [
+    { icon: "💬", url: "https://discord.gg/XXXXXXX",    tip: "Discord"   },
+    { icon: "▶",  url: "https://youtube.com/@XXXXXXX",  tip: "YouTube"   },
+    { icon: "📷", url: "https://instagram.com/XXXXXXX", tip: "Instagram" },
+  ],
+
+
+  /* ── Categorías y archivos ─────────────────────────────────────── */
+  categories: [
+
+    {
+      title: "Juegos PC",
+      icon: "🖥️",
+      items: [
+        { name: "Minecraft Dungeons",    vtag: "64 BITS", links: ["https://www.mediafire.com/file/xtid9fy1onzqhrz/Minecraft_Dungeons.7z/file"], buttons: ["MediaFire"]  },
+        { name: "GTA V",                 vtag: "64 BITS", links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
+        { name: "GTA IV",              tag: "Optimizado", links: ["https://mega.nz/file/aroHCTBK#0QJOVoc4T9ucjo-BJa7knSrUeKxEARjdMctY-BB7zAw"], buttons: ["Mega"]   },
+        { name: "Schedule I",            vtag: "64 BITS", links: ["https://www.mediafire.com/file/3cdahf7pu837fg1/Schedule_I.7z/file", "https://mega.nz/file/jihTSTaJ#nzXVSwIz6UHbsQ69uCYy878PLQizNl7B7fjYmFy2Yw8"], buttons: ["MediaFire", "Mega"]    },
+        { name: "Hollow Knight",         vtag: "64 BITS", links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
+        { name: "Stardew Valley",                         links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
+        { name: "Among Us",              vtag: "LAN",     links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
+        { name: "Terraria",                               links: ["https://www.mediafire.com/file/h503tjdlv85x1gz/T4RRA1A_L1T4.7z/file", "https://mega.nz/file/jzQSRbDS#COPzU2zQMM50zDWvFAKK8poor1JN2MyYObLQ4njy0js"], buttons: ["MediaFire","Mega"]   },
+        { name: "Portal 2",                               links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
+        { name: "Garry's Mod",                            links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
+        { name: "Left 4 Dead 2",         tag: "LAN",      links: ["#"], buttons: ["GoFile"]               },
+        { name: "Red Dead Redemption 2", vtag: "64 BITS", links: ["#", "#"], buttons: ["GoFile","MediaFire"]   },
+        { name: "Elden Ring",            vtag: "64 BITS", links: ["#", "#"], buttons: ["GoFile","MediaFire"]   },
+        { name: "Balatro",               vtag: "64 BITS", links: ["https://www.mediafire.com/file/kdudk1rx2v6wmcp/Balatro.v1.0.1n.7z/file"], buttons: ["MediaFire"]   },
+      ]
+    },
+
+    {
+      title: "Juegos Móvil",
+      icon: "📱",
+      items: [
+        { name: "PUBG Mobile",         vtag: "APK",               links: ["#"], buttons: ["Descargar"]          },
+        { name: "Null's Clash",         vtag: "Clash MOD",        links: ["https://www.mediafire.com/file/4ew9kj9k612wg1v/nulls_Clash.apk/file"], buttons: ["MediaFire"]          },
+        { name: "Master Royale",        vtag: "Infinity",         links: ["#", "#"], buttons: ["MediaFire","GoFile"] },
+        { name: "Free Fire Offline",                              links: ["#", "#"], buttons: ["GoFile","MediaFire"] },
+        { name: "Geometry Dash",       vtag: "MOD",               links: ["https://www.mediafire.com/file/kplwqc5kzlcts7t/Geometry_Dash_v2.2.145.apk/file"], buttons: ["MediaFire"]          },
+        { name: "FNAF 1",                                         links: ["#", "#"], buttons: ["MediaFire","GoFile"] },
+        { name: "FNAF 2",                                         links: ["#", "#"], buttons: ["MediaFire","GoFile"] },
+        { name: "Plants vs Zombies 2", vtag: "MOD",               links: ["#"], buttons: ["MediaFire"]          },
+        { name: "Stumble Guys",        vtag: "MOD",               links: ["#"], buttons: ["MediaFire"]          },
+        { name: "Soul Knight",                                    links: ["#", "#"], buttons: ["MediaFire","GoFile"] },
+      ]
+    },
+
+    {
+      title: "Emuladores",
+      icon: "🕹️",
+      items: [
+        { name: "Descargar juegos",          links: ["https://romsfun.com"],  buttons: ["RomsFun"] },
+        { name: "DuckStation", vtag: "PS1",  links: ["https://www.mediafire.com/file/1qs38ssfdjzhvh8/duckstation-windows-x64-installer.exe/file", "https://mega.nz/file/KmQ1xQpQ#rDYEywlVseCfNA_zZXqW5AknvtYR3uQNdrIApGR6gK8"],  buttons: ["MediaFire","Mega"] },
+        { name: "PCSX2",     vtag: "PS2",    links: ["#", "#"],  buttons: ["MediaFire","GoFile"] },
+        { name: "RPCS3",     vtag: "PS3",    links: ["#"], buttons: ["GoFile"]             },
+        { name: "PPSSPP",    vtag: "PSP",    links: ["#"], buttons: ["Descargar"]          },
+        { name: "Citra",     vtag: "3DS",    links: ["#", "#"],  buttons: ["MediaFire","GoFile"] },
+        { name: "MelonDS",   vtag: "NDS",    links: ["https://www.mediafire.com/file/50mv9hwgy2mvec1/melonDS-1.1-windows-x86_64.zip/file"], buttons: ["MediaFire"]          },
+        { name: "Project64", vtag: "N64",    links: ["#", "#"],  buttons: ["MediaFire","GoFile"] },
+        { name: "Dolphin",   vtag: "WII/GC", links: ["https://mega.nz/file/bnRjABxT#WTy8ZTnIbHdIf7jdtsHCu8xYOXe_9PkHz-yh8u4B-Gw"],  buttons: ["Mega"] },
+        { name: "Snex9x",    vtag: "SNES", tag: "64 bits",  links: ["https://www.mediafire.com/file/pbrtvwdx1tykduh/snes9x-1.62.3-win32-x64.zip/file"], buttons: ["MediaFire"] },
+        { name: "Yuzu",      vtag: "SWITCH", links: ["#", "#"],  buttons: ["MediaFire","GoFile"] },
+        { name: "Cemu",      vtag: "WII U",  links: ["https://drive.google.com/file/d/14-UHsilPzn0rFDqP4X6U14bcCkJ-rlK3/view?usp=sharing"],  buttons: ["Drive"] },
+      ]
+    },
+
+    {
+      title: "Software",
+      icon: "💻",
+      items: [
+        { name: "7-Zip",               tag: "DESCOMPRIMIR", links: ["https://www.7-zip.org/a/7z2501.exe","https://www.7-zip.org/a/7z2501-x64.exe"], buttons: ["32 Bits","64 Bits"] },
+        { name: "VLC Media Player",                          links: ["https://mirror.raiolanetworks.com/videolan/vlc/3.0.23/win64/vlc-3.0.23-win64.exe"], buttons: ["Descargar"]          },
+        { name: "Notepad++",                                 links: ["#"], buttons: ["Descargar"]          },
+        { name: "qBittorrent",         tag: "RECOMENDADO",  links: ["https://download2289.mediafire.com/pbuat4rdsdbgUbeXtMYKsT6JIwDvXZKmmp15jMAHJSd1R5LInn-fpsfDqOpCf6Oc4RMm3_vtYF6hrrwmf0VRHUBQheCdCG1-iRJ4ZyXF4uPn7DByW2r2BtMkJ3Tbcwf7_Zkmq2LeCDKTM_rOthcORDaCUE0LRihJssU_uDURo2_Q/qixghsuq4wbzy3x/qbittorrent-4-5-5.exe"], buttons: ["Descargar"] },
+        { name: "OBS Studio Lite",                           links: ["https://download2279.mediafire.com/le6ojlcj3r7guIkeu4cfzQx6DRn2Oeh-GzPEzdv-erZp6vb0XBZLh-WoSO_2-VkjfUaHyvUkv2htiXD8fg_8-LDM_-MNmrrgfeiNj6F5qM-LwxHUMgWPEyI50bJaVsznNccmlUKGC7XWgf0ifGmButm9eibUWHvDMThNlIs3J8oQ/q5e3fh2rhsfp5de/LighterOBS+V2+By+OptiJuegos.7z"], buttons: ["Descargar"] },
+        { name: "MSI Afterburner",                           links: ["https://download.msi.com/uti_exe/vga/MSIAfterburnerSetup.zip?__token__=exp=1778688138~acl=/*~hmac=a0e09d93118d49f433b06317d54f939a7a6f44f637b9c347285cd2ea652f1b3d"], buttons: ["Descargar"] },
+        { name: "Adobe Premiere 2024",                       links: ["https://download2339.mediafire.com/o9nj5v3i3edgHRcNJPFCWqQUzrwgYsSuoZ9lNgUcU5-yMs32BUKKiZ3zPCm-HzIEw-_5NlN0730T62v9FqaBUhoShk7JU8nAfJGWDCe0JVdA83KcVbcKWeiiFnNGztVrJspp1N4m4k2-wOMae4-K3Q6ymWS0ie4xXCgRkZfb0DFe/coc15nvz7a28jy6/Adobe+Premiere+Portable+2024.7z"], buttons: ["Descargar"] },
+        { name: "FL Studio 21",        tag: "MÚSICA",        links: ["https://download2344.mediafire.com/94cssjxlcmeghucEhq9tPxNGRMTESk1fpDrBq69xEKh9bXg5jOOU8PHrJJUqJGn8VelQIFv6SbCkfV0DufbtDSnFweKZsFK-xNR-8-zD8FmqnXJms4mofT9VQNaVndPOf_uhYA8IJRS8QmmMtV73HeVkiPoGiIoCTMI4LjdBqmYS/w2clx2czznyg9e3/FL+Studio+21.7z"], buttons: ["Descargar"] },
+        { name: "Lossless Scaling",    tag: "FPS",           links: ["https://www.mediafire.com/file/ho3d9mhc183zfqb/Lossless_Scaling_3-2-2.zip/file", "https://mega.nz/file/amARmZ4K#SUghXmurQXU4JrhV-XkdGSDsp-_9ITxbSWMdre7uZd8"], buttons: ["MediaFire","Mega"] },
+      ]
+    },
+
+    {
+      title: "Apps",
+      icon: "📦",
+      items: [
+        { name: "WhatsApp Desktop",                           links: ["#"], buttons: ["Descargar"] },
+        { name: "Spotify",                                    links: ["#"], buttons: ["Descargar"] },
+        { name: "TikTok Revanced",     vtag: "SIN ADS",      links: ["#"], buttons: ["MediaFire"] },
+        { name: "YouTube ReVanced",    vtag: "SIN ADS",      links: ["#"], buttons: ["MediaFire"] },
+        { name: "ZArchiver",           vtag: "ANDROID",      links: ["#"], buttons: ["MediaFire"] },
+        { name: "Winlator",            vtag: "PC EN ANDROID", links: ["https://github.com/brunodev85/winlator/releases"], buttons: ["GitHub"] },
+      ]
+    },
+
+    {
+      title: "Sistemas operativos",
+      icon: "💿",
+      items: [
+        { name: "Windows 10",   tag: "22H2", vtag: "64 bits",      links: ["https://drive.google.com/file/d/1-TvdoDQ2UvXDwfgfQFP9BvgzUheAWTap/view?usp=drive_link"], buttons: ["Drive"]        },
+        { name: "Tiny 11",      tag: "25H2Nov25", vtag: "64 bits", links: ["https://drive.google.com/file/d/1OfiDN95SQScPEakNIwab2Va1EQ7p0siQ/view?usp=drive_link"], buttons: ["Drive"]        },
+        { name: "Cómo instalar juegos",                      links: ["https://download2289.mediafire.com/pbuat4rdsdbgUbeXtMYKsT6JIwDvXZKmmp15jMAHJSd1R5LInn-fpsfDqOpCf6Oc4RMm3_vtYF6hrrwmf0VRHUBQheCdCG1-iRJ4ZyXF4uPn7DByW2r2BtMkJ3Tbcwf7_Zkmq2LeCDKTM_rOthcORDaCUE0LRihJssU_uDURo2_Q/qixghsuq4wbzy3x/qbittorrent-4-5-5.exe"], buttons: ["Tutorial"]    },
+        { name: "Discord BANANA GAMES",                      links: ["#"], buttons: ["Unirse"]      },
+        { name: "Canal de YouTube",                          links: ["#"], buttons: ["Suscribirse"] },
+      ]
+    }
+
+  ]
+
+};
+
+
+/* ═══════════════════════════════════════════════════════════════
+   3b. Motor interno — no hace falta editar desde aquí
+   ═══════════════════════════════════════════════════════════════ */
+
+if (CONFIG.backgroundImage) {
+  document.body.style.backgroundImage = "url('" + CONFIG.backgroundImage + "')";
+}
+
+var brandLogoEl = document.getElementById("brandLogo");
+if (CONFIG.logoType === "image" && CONFIG.logo) {
+  var logoImg = document.createElement("img");
+  logoImg.src = CONFIG.logo;
+  logoImg.alt = CONFIG.siteName;
+  brandLogoEl.appendChild(logoImg);
+} else {
+  var logoIcon = document.createElement("div");
+  logoIcon.className = "brand-icon-fallback";
+  logoIcon.textContent = CONFIG.logo || "🍌";
+  brandLogoEl.appendChild(logoIcon);
+}
+var brandTextEl = document.createElement("div");
+brandTextEl.className = "brand-text";
+brandTextEl.innerHTML = '<div class="name">' + CONFIG.siteName + '</div><div class="sub">' + CONFIG.siteTagline + '</div>';
+brandLogoEl.appendChild(brandTextEl);
+
+document.getElementById("infoBox").innerHTML =
+  '<h1>' + CONFIG.infoTitle + '</h1>' +
+  '<span style="font-size:12px;color:rgba(255,255,255,.7)">' + CONFIG.infoText + '</span>';
+
+document.getElementById("footerText").textContent = CONFIG.footerText;
+
+var socialEl = document.getElementById("socialButtons");
+CONFIG.socialLinks.forEach(function(s) {
+  var btn = document.createElement("button");
+  btn.textContent = s.icon;
+  btn.title = s.tip || "";
+  btn.onclick = function() { window.open(s.url, "_blank"); };
+  socialEl.appendChild(btn);
+});
+
+var categoryListEl  = document.getElementById("categoryList");
+var itemListEl      = document.getElementById("itemList");
+var downloadBtnsEl  = document.getElementById("downloadButtons");
+var categoryTitleEl = document.getElementById("categoryTitle");
+var searchInput     = document.getElementById("bananasearch");
+var currentCategory = undefined;
+var selectedItem    = undefined;
+
+CONFIG.categories.forEach(function(cat, idx) {
+  var li    = document.createElement("li");
+  var icon  = document.createElement("span"); icon.className  = "cat-icon";  icon.textContent  = cat.icon;
+  var label = document.createElement("span"); label.textContent = cat.title;
+  var badge = document.createElement("span"); badge.className = "cat-count"; badge.textContent = cat.items.length;
+  li.appendChild(icon); li.appendChild(label); li.appendChild(badge);
+  li.addEventListener("click", (function(i) { return function() { changeCategory(i); }; })(idx));
+  categoryListEl.appendChild(li);
+});
+
+function changeCategory(idx) {
+  if (idx === currentCategory) return;
+  searchInput.value = "";
+  if (currentCategory !== undefined)
+    categoryListEl.children[currentCategory].classList.remove("selected");
+  categoryListEl.children[idx].classList.add("selected");
+  categoryTitleEl.textContent = CONFIG.categories[idx].title;
+  currentCategory = idx;
+  selectedItem = undefined;
+  renderItems(CONFIG.categories[idx].items);
+  if (CONFIG.categories[idx].items.length > 0)
+    selectItem(CONFIG.categories[idx].items[0], 0);
+}
+
+function renderItems(items) {
+  itemListEl.innerHTML = "";
+  downloadBtnsEl.innerHTML = "";
+  items.forEach(function(item, i) {
+    var li = document.createElement("li");
+    li.textContent = item.name;
+    if (item.vtag) { var vt = document.createElement("span"); vt.className = "tag vtag"; vt.textContent = item.vtag; li.appendChild(vt); }
+    if (item.tag)  { var tg = document.createElement("span"); tg.className = "tag";      tg.textContent = item.tag;  li.appendChild(tg); }
+    li.addEventListener("click", (function(it, idx) { return function() { selectItem(it, idx); }; })(item, i));
+    itemListEl.appendChild(li);
+  });
+}
+
+function selectItem(item, idx) {
+  if (idx === selectedItem) return;
+  if (selectedItem !== undefined && itemListEl.children[selectedItem])
+    itemListEl.children[selectedItem].classList.remove("selected");
+  if (itemListEl.children[idx])
+    itemListEl.children[idx].classList.add("selected");
+  selectedItem = idx;
+  downloadBtnsEl.innerHTML = "";
+  if (!item.links || item.links.length === 0) return;
+  item.links.forEach(function(url, i) {
+    var a = document.createElement("a");
+    a.textContent = (item.buttons && item.buttons[i]) ? item.buttons[i] : "Descargar";
+    a.href = url;
+    a.target = "_blank";
+    a.draggable = false;
+    var lbl = a.textContent.toLowerCase();
+    if      (lbl.includes("mediafire")) a.className = "mediafire";
+    else if (lbl.includes("gofile"))    a.className = "gofile";
+    else if (lbl.includes("mega"))      a.className = "mega";
+    else if (lbl.includes("torrent"))   a.className = "torrent";
+    else if (lbl.includes("drive"))     a.className = "drive";
+    else if (lbl.includes("romsfun"))   a.className = "romsfun";
+     else if (lbl.includes("github"))   a.className = "github";
+    downloadBtnsEl.appendChild(a);
+  });
+}
+
+searchInput.addEventListener("keyup", function() {
+  var q = searchInput.value.trim().toLowerCase();
+  if (!q) { if (currentCategory !== undefined) changeCategory(currentCategory); return; }
+  var results = [];
+  CONFIG.categories.forEach(function(cat) {
+    cat.items.forEach(function(item) {
+      if (item.name.toLowerCase().indexOf(q) !== -1) results.push(item);
+    });
+  });
+  if (currentCategory !== undefined) {
+    categoryListEl.children[currentCategory].classList.remove("selected");
+    currentCategory = undefined;
+  }
+  selectedItem = undefined;
+  categoryTitleEl.textContent = results.length > 0
+    ? "Búsqueda: " + results.length + " resultado" + (results.length !== 1 ? "s" : "")
+    : "Sin resultados";
+  renderItems(results);
+  if (results.length > 0) selectItem(results[0], 0);
+  else downloadBtnsEl.innerHTML = "";
+});
+
+function openOverlay(title) {
+  document.getElementById("overlay").style.display = "flex";
+  document.getElementById("overlayTitle").textContent = title;
+}
+function closeOverlay() {
+  document.getElementById("overlay").style.display = "none";
+}
+
+changeCategory(0);
+
+// --- PROTOCOLO DE AUDIO DE GEN ---
+document.addEventListener('click', function() {
+    var audio = document.getElementById('bg-music');
+    if (audio.paused) {
+        audio.play().catch(e => console.log("Audio en espera..."));
+    }
+}, { once: true });
+
+</script>
+</html>
