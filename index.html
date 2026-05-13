@@ -303,6 +303,8 @@
   .romsfun:hover  { background-color: rgba(69, 5, 82, 0.4)  !important; }
   .github         { background-color: rgba(7, 129, 236, 0.4)  !important; }
   .github:hover   { background-color: rgba(13, 7, 129, 0.4)  !important; }
+  .play           { background-color: rgba(12, 230, 12, 0.5)  !important; }
+  .play:hover     { background-color: rgba(12, 230, 12, 0.5)  !important; }
 
   /* --- 1l. Responsive --- */
   @media (max-height: 600px) {
@@ -449,6 +451,7 @@ var CONFIG = {
         { name: "Red Dead Redemption 2", vtag: "64 BITS", links: ["#", "#"], buttons: ["GoFile","MediaFire"]   },
         { name: "Elden Ring",            vtag: "64 BITS", links: ["#", "#"], buttons: ["GoFile","MediaFire"]   },
         { name: "Balatro",               vtag: "64 BITS", links: ["https://www.mediafire.com/file/kdudk1rx2v6wmcp/Balatro.v1.0.1n.7z/file"], buttons: ["MediaFire"]   },
+        { name: "Counter Strike",        vtag: "Online", tag: "1.6",   links: ["https://play-cs.com/es/servers"], buttons: ["Play"]   },
       ]
     },
 
@@ -641,7 +644,8 @@ function selectItem(item, idx) {
     else if (lbl.includes("torrent"))   a.className = "torrent";
     else if (lbl.includes("drive"))     a.className = "drive";
     else if (lbl.includes("romsfun"))   a.className = "romsfun";
-     else if (lbl.includes("github"))   a.className = "github";
+    else if (lbl.includes("github"))   a.className = "github";
+    else if (lbl.includes("play"))     a.className = "play";
     downloadBtnsEl.appendChild(a);
   });
 }
