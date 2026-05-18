@@ -1,6 +1,11 @@
 <!doctype html>
 <html lang="es">
 <style>
+   
+  /*Si quieres buscar todo mas rapido, en el bloc de notas de windows solo pulsa CTRL+B */
+  //AVANCES RAPIDOS BLOC DE NOTAS WINDOWS//
+  //1a BASE Y FONDO//
+  //1b CAJA GENÉRICA//
 
   /* --- 1a. Base y fondo --- */
   html, body {
@@ -257,6 +262,13 @@
     display: flex; align-items: center; justify-content: center; cursor: pointer; color: #ffd700; font-size: 18px; transition: background 0.12s;
   }
   aside.right button:hover { background-color: rgba(255, 200, 0, 0.15); }
+  
+  /* Estilo para los logos en los botones sociales */
+  aside.right button img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
 
   /* --- 1h. Overlay --- */
   #overlay {
@@ -265,7 +277,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    width: vw;
+    width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.85);
     z-index: 11;
@@ -305,6 +317,14 @@
   .github:hover   { background-color: rgba(13, 7, 129, 0.4)  !important; }
   .play           { background-color: rgba(12, 230, 12, 0.5)  !important; }
   .play:hover     { background-color: rgba(11, 135, 11, 0.35) !important; }
+  .android        { background-color: rgba(61, 220, 132, 0.35) !important; }
+  .android:hover  { background-color: rgba(46, 175, 105, 0.35) !important; }
+  .ios:hover      { background-color: rgba(220, 220, 220, 0.35) !important; }
+  .ios            { background-color: rgba(255, 255, 255, 0.35) !important; }
+  .web            { background-color: rgba(157, 0, 255, 0.35) !important; }
+  .web:hover      { background-color: rgba(26, 0, 51, 0.35) !important; }
+  .visit          { background-color: rgba(0, 255, 255, 0.35) !important; }
+  .visit:hover    { background-color: rgba(0, 191, 255, 0.35) !important; }
 
   /* --- 1l. Responsive --- */
   @media (max-height: 600px) {
@@ -424,9 +444,10 @@ var CONFIG = {
 
   /* ── Redes sociales (botones del sidebar derecho) ──────────────── */
   socialLinks: [
-    { icon: "💬", url: "https://discord.gg/XXXXXXX",    tip: "Discord"   },
-    { icon: "▶",  url: "https://youtube.com/@XXXXXXX",  tip: "YouTube"   },
-    { icon: "📷", url: "https://instagram.com/XXXXXXX", tip: "Instagram" },
+    // Ahora puedes usar logo: "nombre_del_archivo.png" para usar una imagen local
+    { logo: "discord.png", url: "https://discord.gg/ubv24cGt", tip: "Discord" },
+    { logo: "YouTube.png", url: "https://www.youtube.com/@BananaGames3200", tip: "YouTube" },
+    { logo: "Insta.png", url: "https://www.instagram.com/los_juegos_de_banana/", tip: "Instagram" },
   ],
 
 
@@ -437,21 +458,24 @@ var CONFIG = {
       title: "Juegos PC",
       icon: "🖥️",
       items: [
-        { name: "Minecraft Dungeons",    vtag: "64 BITS", links: ["https://www.mediafire.com/file/xtid9fy1onzqhrz/Minecraft_Dungeons.7z/file"], buttons: ["MediaFire"]  },
-        { name: "GTA V",                 vtag: "64 BITS", links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
-        { name: "GTA IV",              tag: "Optimizado", links: ["https://mega.nz/file/aroHCTBK#0QJOVoc4T9ucjo-BJa7knSrUeKxEARjdMctY-BB7zAw"], buttons: ["Mega"]   },
-        { name: "Schedule I",            vtag: "64 BITS", links: ["https://www.mediafire.com/file/3cdahf7pu837fg1/Schedule_I.7z/file", "https://mega.nz/file/jihTSTaJ#nzXVSwIz6UHbsQ69uCYy878PLQizNl7B7fjYmFy2Yw8"], buttons: ["MediaFire", "Mega"]    },
-        { name: "Hollow Knight",         vtag: "64 BITS", links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
-        { name: "Stardew Valley",                         links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
         { name: "Among Us",              vtag: "LAN",     links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
-        { name: "Terraria",                               links: ["https://www.mediafire.com/file/h503tjdlv85x1gz/T4RRA1A_L1T4.7z/file", "https://mega.nz/file/jzQSRbDS#COPzU2zQMM50zDWvFAKK8poor1JN2MyYObLQ4njy0js"], buttons: ["MediaFire","Mega"]   },
-        { name: "Portal 2",                               links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
-        { name: "Garry's Mod",                            links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
-        { name: "Left 4 Dead 2",         tag: "LAN",      links: ["#"], buttons: ["GoFile"]               },
-        { name: "Red Dead Redemption 2", vtag: "64 BITS", links: ["#", "#"], buttons: ["GoFile","MediaFire"]   },
-        { name: "Elden Ring",            vtag: "64 BITS", links: ["#", "#"], buttons: ["GoFile","MediaFire"]   },
         { name: "Balatro",               vtag: "64 BITS", links: ["https://www.mediafire.com/file/kdudk1rx2v6wmcp/Balatro.v1.0.1n.7z/file"], buttons: ["MediaFire"]   },
-        { name: "Counter Strike",        vtag: "Online", tag: "1.6",   links: ["https://play-cs.com/es/servers"], buttons: ["Play"]   },
+        { name: "Counter Strike 1.6",    vtag: "Online", tag: "Jugar",  links: ["https://play-cs.com/es/servers"], buttons: ["Play"]   },
+        { name: "Counter Strike 1.6",    vtag: "Online", tag: "descargar",  links: ["#", "#"], buttons: ["MediaFire", "Mega"]   },
+        { name: "Counter Strike: Condition Zero",    vtag: "Online", tag: "descargar",  links: ["#", "#"], buttons: ["MediaFire", "Mega"]   },
+        { name: "Elden Ring",            vtag: "64 BITS", links: ["#", "#"], buttons: ["GoFile","MediaFire"]   },
+        { name: "Garry's Mod",                            links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
+        { name: "GTA IV",              tag: "Optimizado", links: ["https://mega.nz/file/aroHCTBK#0QJOVoc4T9ucjo-BJa7knSrUeKxEARjdMctY-BB7zAw"], buttons: ["Mega"]   },
+        { name: "GTA V",                 vtag: "64 BITS", links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
+        { name: "Hollow Knight",         vtag: "64 BITS", links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
+        { name: "Left 4 Dead 2",         tag: "LAN",      links: ["#"], buttons: ["GoFile"]               },
+        { name: "Minecraft 1.12.2",      vtag: "Online",  links: ["https://eaglercraft.com/play?version=1.12.2"], buttons: ["Play"]  },
+        { name: "Minecraft Dungeons",    vtag: "64 BITS", links: ["https://www.mediafire.com/file/xtid9fy1onzqhrz/Minecraft_Dungeons.7z/file"], buttons: ["MediaFire"]  },
+        { name: "Portal 2",                               links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
+        { name: "Red Dead Redemption 2", vtag: "64 BITS", links: ["#", "#"], buttons: ["GoFile","MediaFire"]   },
+        { name: "Schedule I",            vtag: "64 BITS", links: ["https://www.mediafire.com/file/3cdahf7pu837fg1/Schedule_I.7z/file", "https://mega.nz/file/jihTSTaJ#nzXVSwIz6UHbsQ69uCYy878PLQizNl7B7fjYmFy2Yw8"], buttons: ["MediaFire", "Mega"]    },
+        { name: "Stardew Valley",                         links: ["#", "#"], buttons: ["MediaFire","GoFile"]   },
+        { name: "Terraria",                               links: ["https://www.mediafire.com/file/h503tjdlv85x1gz/T4RRA1A_L1T4.7z/file", "https://mega.nz/file/jzQSRbDS#COPzU2zQMM50zDWvFAKK8poor1JN2MyYObLQ4njy0js"], buttons: ["MediaFire","Mega"]   },
       ]
     },
 
@@ -459,16 +483,16 @@ var CONFIG = {
       title: "Juegos Móvil",
       icon: "📱",
       items: [
-        { name: "PUBG Mobile",         vtag: "APK",               links: ["#"], buttons: ["Descargar"]          },
-        { name: "Null's Clash",         vtag: "Clash MOD",        links: ["https://www.mediafire.com/file/4ew9kj9k612wg1v/nulls_Clash.apk/file"], buttons: ["MediaFire"]          },
-        { name: "Master Royale",        vtag: "Infinity",         links: ["#", "#"], buttons: ["MediaFire","GoFile"] },
-        { name: "Free Fire Offline",                              links: ["#", "#"], buttons: ["GoFile","MediaFire"] },
-        { name: "Geometry Dash",       vtag: "MOD",               links: ["https://www.mediafire.com/file/kplwqc5kzlcts7t/Geometry_Dash_v2.2.145.apk/file"], buttons: ["MediaFire"]          },
         { name: "FNAF 1",                                         links: ["#", "#"], buttons: ["MediaFire","GoFile"] },
         { name: "FNAF 2",                                         links: ["#", "#"], buttons: ["MediaFire","GoFile"] },
+        { name: "Free Fire Offline",                              links: ["#", "#"], buttons: ["GoFile","MediaFire"] },
+        { name: "Geometry Dash",       vtag: "MOD",               links: ["https://www.mediafire.com/file/kplwqc5kzlcts7t/Geometry_Dash_v2.2.145.apk/file"], buttons: ["MediaFire"]          },
+        { name: "Master Royale",        vtag: "Infinity",         links: ["#", "#"], buttons: ["MediaFire","GoFile"] },
+        { name: "Null's Clash",         vtag: "Clash MOD",        links: ["https://www.mediafire.com/file/4ew9kj9k612wg1v/nulls_Clash.apk/file"], buttons: ["MediaFire"]          },
         { name: "Plants vs Zombies 2", vtag: "MOD",               links: ["#"], buttons: ["MediaFire"]          },
-        { name: "Stumble Guys",        vtag: "MOD",               links: ["#"], buttons: ["MediaFire"]          },
+        { name: "PUBG Mobile",         vtag: "APK",               links: ["#"], buttons: ["Descargar"]          },
         { name: "Soul Knight",                                    links: ["#", "#"], buttons: ["MediaFire","GoFile"] },
+        { name: "Stumble Guys",        vtag: "MOD",               links: ["#"], buttons: ["MediaFire"]          },
       ]
     },
 
@@ -478,16 +502,16 @@ var CONFIG = {
       items: [
         { name: "Descargar juegos",          links: ["https://romsfun.com"],  buttons: ["RomsFun"] },
         { name: "DuckStation", vtag: "PS1",  links: ["https://www.mediafire.com/file/1qs38ssfdjzhvh8/duckstation-windows-x64-installer.exe/file", "https://mega.nz/file/KmQ1xQpQ#rDYEywlVseCfNA_zZXqW5AknvtYR3uQNdrIApGR6gK8"],  buttons: ["MediaFire","Mega"] },
-        { name: "PCSX2",     vtag: "PS2",    links: ["#", "#"],  buttons: ["MediaFire","GoFile"] },
-        { name: "RPCS3",     vtag: "PS3",    links: ["#"], buttons: ["GoFile"]             },
-        { name: "PPSSPP",    vtag: "PSP",    links: ["#"], buttons: ["Descargar"]          },
-        { name: "Citra",     vtag: "3DS",    links: ["#", "#"],  buttons: ["MediaFire","GoFile"] },
-        { name: "MelonDS",   vtag: "NDS",    links: ["https://www.mediafire.com/file/50mv9hwgy2mvec1/melonDS-1.1-windows-x86_64.zip/file"], buttons: ["MediaFire"]          },
-        { name: "Project64", vtag: "N64",    links: ["#", "#"],  buttons: ["MediaFire","GoFile"] },
-        { name: "Dolphin",   vtag: "WII/GC", links: ["https://mega.nz/file/bnRjABxT#WTy8ZTnIbHdIf7jdtsHCu8xYOXe_9PkHz-yh8u4B-Gw"],  buttons: ["Mega"] },
-        { name: "Snex9x",    vtag: "SNES", tag: "64 bits",  links: ["https://www.mediafire.com/file/pbrtvwdx1tykduh/snes9x-1.62.3-win32-x64.zip/file"], buttons: ["MediaFire"] },
-        { name: "Yuzu",      vtag: "SWITCH", links: ["#", "#"],  buttons: ["MediaFire","GoFile"] },
-        { name: "Cemu",      vtag: "WII U",  links: ["https://drive.google.com/file/d/14-UHsilPzn0rFDqP4X6U14bcCkJ-rlK3/view?usp=sharing"],  buttons: ["Drive"] },
+        { name: "PCSX2",     vtag: "PS2",    links: ["https://github.com/PCSX2/pcsx2/releases/download/v2.6.3/PCSX2-v2.6.3-windows-x64-installer.exe"],  buttons: ["Descargar"] },
+        { name: "RPCS3",     vtag: "PS3",    links: ["https://github.com/RPCS3/rpcs3-binaries-win/releases/download/build-e52b6ecbbfc98cef705dffe6c5909dcd9f344a53/rpcs3-v0.0.40-19358-e52b6ecb_win64_msvc.7z", "https://github.com/RPCS3/rpcs3-binaries-win/releases/download/build-b533a560e6df6f8aa1c271bfffbd1e39f500bd65/rpcs3-v0.0.40-19374-b533a560_win64_msvc.7z"], buttons: ["GitHub", "Descargar"]             },
+        { name: "PPSSPP",    vtag: "PSP",    links: ["https://www.ppsspp.org/files/1_20_3/PPSSPPSetup.exe", "https://www.ppsspp.org/download/", "https://www.ppsspp.org/files/1_20_3/ppsspp.apk", "https://apps.apple.com/us/app/ppsspp-psp-emulator/id6496972903"], buttons: ["Descargar", "WEB", "Android", "iOS"]          },
+        { name: "Citra",     vtag: "3DS",    links: ["#", "#"],  buttons: ["MediaFire","Descargar"] },
+        { name: "MelonDS",   vtag: "NDS",    links: ["https://www.mediafire.com/file/50mv9hwgy2mvec1/melonDS-1.1-windows-x86_64.zip/file", "#"], buttons: ["MediaFire", "Descargar"]          },
+        { name: "Project64", vtag: "N64",    links: ["#", "#"],  buttons: ["MediaFire","Descargar"] },
+        { name: "Dolphin",   vtag: "WII/GC", links: ["https://mega.nz/file/bnRjABxT#WTy8ZTnIbHdIf7jdtsHCu8xYOXe_9PkHz-yh8u4B-Gw", "#"],  buttons: ["Mega", "Descargar"] },
+        { name: "Snex9x",    vtag: "SNES", tag: "64 bits",  links: ["https://www.mediafire.com/file/pbrtvwdx1tykduh/snes9x-1.62.3-win32-x64.zip/file", "#"], buttons: ["MediaFire", "Descargar"] },
+        { name: "Yuzu",      vtag: "SWITCH", links: ["https://usc1.contabostorage.com/b14312a874cd4fb8812c5c8860564d3a:downloads/yuzu-1734.zip"],  buttons: ["Descargar"] },
+        { name: "Cemu",      vtag: "WII U",  links: ["https://drive.google.com/file/d/14-UHsilPzn0rFDqP4X6U14bcCkJ-rlK3/view?usp=sharing", "https://github.com/cemu-project/Cemu/releases/download/v2.6/cemu-2.6-windows-x64.zip"],  buttons: ["Drive", "Descargar"] },
       ]
     },
 
@@ -530,6 +554,16 @@ var CONFIG = {
         { name: "Discord BANANA GAMES",                      links: ["#"], buttons: ["Unirse"]      },
         { name: "Canal de YouTube",                          links: ["#"], buttons: ["Suscribirse"] },
       ]
+    },
+
+    {
+      title: "EXTRA",
+      icon: "⭐",
+      items: [
+                { name: "Pagina de Optijuegos",                          links: ["https://optijuegos.net/"], buttons: ["Visit"] },
+                { name: "Canal de Optijuegos",      tag: "YouTube",     links: ["https://www.youtube.com/@OptiProjects"], buttons: ["Visit"] },
+                { name: "Canal de Optijuegos",      tag: "Instagram",     links: ["https://www.instagram.com/optijogos"], buttons: ["Visit"] },
+      ]
     }
 
   ]
@@ -571,7 +605,16 @@ document.getElementById("footerText").textContent = CONFIG.footerText;
 var socialEl = document.getElementById("socialButtons");
 CONFIG.socialLinks.forEach(function(s) {
   var btn = document.createElement("button");
-  btn.textContent = s.icon;
+  
+  // LOGICA PARA IMAGENES O ICONOS
+  if (s.logo) {
+    var img = document.createElement("img");
+    img.src = s.logo;
+    btn.appendChild(img);
+  } else {
+    btn.textContent = s.icon;
+  }
+  
   btn.title = s.tip || "";
   btn.onclick = function() { window.open(s.url, "_blank"); };
   socialEl.appendChild(btn);
@@ -646,6 +689,10 @@ function selectItem(item, idx) {
     else if (lbl.includes("romsfun"))   a.className = "romsfun";
     else if (lbl.includes("github"))   a.className = "github";
     else if (lbl.includes("play"))     a.className = "play";
+    else if (lbl.includes("android"))     a.className = "android";
+    else if (lbl.includes("ios"))      a.className = "ios";
+    else if (lbl.includes("web"))      a.className = "web";
+    else if (lbl.includes("visit"))    a.className = "visit";
     downloadBtnsEl.appendChild(a);
   });
 }
